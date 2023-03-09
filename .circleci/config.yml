@@ -71,6 +71,7 @@ jobs:
   test-frontend:
     docker:
       # Docker image here
+      - image: cimgv
     steps:
       # Checkout code from git
       # Restore from cache
@@ -79,6 +80,7 @@ jobs:
   test-backend:
     docker:
       # Docker image here
+      - image: cimg
     steps:
       # Checkout code from git
       # Restore from cache
@@ -87,6 +89,7 @@ jobs:
   scan-frontend:
     docker:
       # Docker image here
+      - image: cimg
     steps:
       # Checkout code from git
       # Restore from cache
@@ -95,6 +98,7 @@ jobs:
   scan-backend:
     docker:
       # Docker image here
+      - image: cimg
     steps:
       # Checkout code from git
       # Restore from cache
@@ -103,6 +107,7 @@ jobs:
   deploy-infrastructure:
     docker:
       # Docker image here that supports AWS CLI
+      - image: cimg
     steps:
       # Checkout code from git
       - run:
@@ -137,6 +142,7 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
+      - image: cimg
     steps:
       # Checkout code from git
       # Add ssh keys with fingerprint
@@ -156,6 +162,7 @@ jobs:
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
+      - image: cimg
     steps:
       # Checkout code from git
       - run:
@@ -173,6 +180,7 @@ jobs:
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
+      - image: cimg
     steps:
       # Checkout code from git
       - run:
@@ -211,6 +219,7 @@ jobs:
   smoke-test:
     docker:
       # Lightweight Docker image 
+      - image: cimg
     steps:
       # Checkout code from git
       - run:
@@ -234,7 +243,7 @@ jobs:
   cloudfront-update:
     docker:
       # Docker image here that supports AWS CLI
-      - image: cimg/node:19.7.0
+      - image: cimg
     steps:
       # Checkout code from git
       - run:
