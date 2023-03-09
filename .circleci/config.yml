@@ -73,6 +73,11 @@ jobs:
       # Docker image here
       - image: cimgv
     steps:
+      - run:
+          name: testfe
+          command: |
+            # Your code here
+            exit 1
       # Checkout code from git
       # Restore from cache
       # Your job code here
@@ -82,6 +87,11 @@ jobs:
       # Docker image here
       - image: cimg
     steps:
+      - run:
+          name: testbe
+          command: |
+            # Your code here
+            exit 1
       # Checkout code from git
       # Restore from cache
       # Your job code here
@@ -91,6 +101,11 @@ jobs:
       # Docker image here
       - image: cimg
     steps:
+      - run:
+          name: scanfe
+          command: |
+            # Your code here
+            exit 1
       # Checkout code from git
       # Restore from cache
       # Your job code here
@@ -100,6 +115,11 @@ jobs:
       # Docker image here
       - image: cimg
     steps:
+      - run:
+          name: scanbe
+          command: |
+            # Your code here
+            exit 1
       # Checkout code from git
       # Restore from cache
       # Your job code here
