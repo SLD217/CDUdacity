@@ -234,6 +234,7 @@ jobs:
   cloudfront-update:
     docker:
       # Docker image here that supports AWS CLI
+      - image: cimg/node:19.7.0
     steps:
       # Checkout code from git
       - run:
@@ -249,6 +250,7 @@ jobs:
   cleanup:
     docker:
       # Docker image here
+      - image: cimg/node:19.7.0
     steps:
       # Checkout code from git
       - run:
