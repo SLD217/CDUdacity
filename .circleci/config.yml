@@ -112,31 +112,40 @@ jobs:
             
   scan-frontend:
     docker:
-      # Docker image here
-      - image: cimg
+      - image: cimg/node:13.8.0
     steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-scan]
       - run:
-          name: scanfe
+          name: front-end scan
           command: |
-            # Your code here
-            exit 1
+            cd frontend &&
+            npm install &&
+            npm audit --audit-level=critical     
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-scan
       # Checkout code from git
       # Restore from cache
       # Your job code here
 
   scan-backend:
     docker:
-      # Docker image here
-      - image: cimg
+      - image: cimg/node:13.8.0
     steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-scan]
       - run:
-          name: scanbe
+          name: Back-end scan
           command: |
-            # Your code here
-            exit 1
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
+            cd backend &&
+            npm install &&
+            npm audit --audit-level=critical     
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-scan
 
   deploy-infrastructure:
     docker:
@@ -321,10 +330,10 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
-#      - scan-backend:
-#          requires: [build-backend]
-#      - scan-frontend:
-#          requires: [build-frontend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
 #      - deploy-infrastructure:
 #          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
 #          filters:
