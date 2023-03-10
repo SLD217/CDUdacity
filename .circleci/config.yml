@@ -224,9 +224,9 @@ jobs:
   #          sudo apt-add-repository -y ppa:ansible/ansible && \
   #          sudo apt-get update && \
   #          sudo apt-get install -y ansible
-      - run:
-          name: Verify Ansible installation
-          command: ansible --version
+  #    - run:
+  #        name: Verify Ansible installation
+  #        command: ansible --version
       - run:
           name: Install AWS CLI
           command: |
