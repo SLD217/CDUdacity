@@ -217,8 +217,15 @@ jobs:
           # Must be absolute path or relative path from working_directory
           at: /tmp
       - run:
+          name: Install Ansible
+          command: | 
+            apk add --update ansible
+            # Install Ansible
+      - run:
           name: Install dependencies
           command: | 
+            sudo apt install curl -y &&
+            sudo apt install yum -y &&
             yum install -y tar gzip &&
             python3 -m pip install --user ansible
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &&
