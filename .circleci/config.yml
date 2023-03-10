@@ -190,7 +190,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - CDUDACITY/.circleci/ansible/inventory.txt
+            - Project/.circleci/ansible/inventory.txt
       - run:
           name: Destroy environment
             # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
@@ -204,22 +204,30 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg
+      - image: python:3.7-alpine3.11
     steps:
       # Checkout code from git
+      - checkout
       # Add ssh keys with fingerprint
+      - add_ssh_keys:
+              # You can get this ID in the section where you registered the SSH Key
+              fingerprints: ["f1:2f:b5:8d:21:5e:2b:39:28:b5:4a:61:4b:f7:61:bc"] 
       # attach workspace
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /tmp
       - run:
           name: Install dependencies
-          command: |
-            # Your code here
-            exit 1
+          command: | 
+            yum install -y tar gzip &&
+            python3 -m pip install --user ansible
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &&
+            unzip awscliv2.zip &&
+            sudo ./aws/install -y
       - run:
           name: Configure server
           command: |
-            # Your code here
-            exit 1
-      # Here's where you will add some code to rollback on failure      
+            ansible-playbook -i "inventory.txt" "configure-server.yml"
 
   run-migrations:
     docker:
