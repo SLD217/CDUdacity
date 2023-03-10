@@ -164,18 +164,12 @@ jobs:
       # Checkout code from git
       - checkout
       - run:
-          name: Install tar
+          name: Install tar & gzip
           command: |
-            sudo apt-get update && \
-            sudo apt-get install -y tar
+            yum install -y tar gzip
       - run:
           name: Verify tar installation
           command: tar --version
-      - run:
-          name: Install gzip
-          command: |
-            sudo apt-get update && \
-            sudo apt-get install -y gzip
       - run:
           name: Verify gzip installation
           command: gzip --version
