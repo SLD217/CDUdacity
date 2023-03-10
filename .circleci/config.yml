@@ -164,9 +164,21 @@ jobs:
       # Checkout code from git
       - checkout
       - run:
-          name: Install tar and gzip
+          name: Install tar
           command: |
-            yum install -y tar gzip
+            sudo apt-get update && \
+            sudo apt-get install -y tar
+      - run:
+          name: Verify tar installation
+          command: tar --version
+      - run:
+          name: Install gzip
+          command: |
+            sudo apt-get update && \
+            sudo apt-get install -y gzip
+      - run:
+          name: Verify gzip installation
+          command: gzip --version
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -199,8 +211,6 @@ jobs:
       - destroy_environment
 
 
-
-
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
@@ -215,7 +225,7 @@ jobs:
       # attach workspace
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: /tmp
+          at: .
       - run:
           name: Install Ansible
           command: |
@@ -255,7 +265,8 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i "/tmp/inventory.txt" "\.circleci\configure-server.yml"
+            ansible-playbook -i "./inventory.txt" "\configure-server.yml"
+      - destroy_environment
 
   run-migrations:
     docker:
