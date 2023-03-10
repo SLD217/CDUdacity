@@ -9,7 +9,6 @@ commands:
           name: Destroy environment
             # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
             # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
-          when: on_fail
           command: |
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} &&
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} 
@@ -186,22 +185,20 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-              mkdir -p $CIRCLE_WORKING_DIRECTORY
-              echo "[my_hosts]" > $CIRCLE_WORKING_DIRECTORY/inventory.txt &&
+              # mkdir -p $CIRCLE_WORKING_DIRECTORY
+              echo "[my_hosts]" > inventory.txt &&
               aws ec2 describe-instances \
               --filters "Name=tag:Project, Values=udapeople" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> $CIRCLE_WORKING_DIRECTORY/inventory.txt
+              --output text >> inventory.txt
       - persist_to_workspace:
-          root: $CIRCLE_WORKING_DIRECTORY
+          root: 
           paths:
             - inventory.txt
-      - run:
+      - destroy_environment:
           name: Destroy environment
-            # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
-            # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
           when: on_fail
-          command: destroy_environment 
+
 
 
   configure-infrastructure:
@@ -218,7 +215,7 @@ jobs:
       # attach workspace
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: /tmp/$CIRCLE_WORKING_DIRECTORY
+          at: /tmp
       - run:
           name: Install Ansible
           command: |
@@ -258,7 +255,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i "/tmp/$CIRCLE_WORKING_DIRECTORY/inventory.txt" "\.circleci\configure-server.yml"
+            ansible-playbook -i "/tmp/inventory.txt" "\.circleci\configure-server.yml"
 
   run-migrations:
     docker:
