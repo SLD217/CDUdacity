@@ -200,7 +200,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> inventory.txt
       - persist_to_workspace:
-          root: .
+          root: ~
           paths:
             - inventory.txt
       - destroy_environment
