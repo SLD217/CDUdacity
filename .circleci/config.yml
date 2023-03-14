@@ -264,7 +264,9 @@ jobs:
           at: ~/
       - run:
           name: show reference file
-          command: cat project/.circleci/ansible/inventory.txt
+          command: |
+            cat .circleci/ansible/inventory.txt &&
+            cat inventory.txt
       - run:
           name: Configure server
           command: |
