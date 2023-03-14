@@ -201,9 +201,14 @@ jobs:
               --output text >> inventory.txt &&
               cat inventory.txt
       - persist_to_workspace:
-          root: .circleci/ansible/
+          root: ~
           paths:
-            - inventory.txt
+            - project/.circleci/ansible/inventory.txt
+      - run:
+          name: check investory file
+          command: |
+              # mkdir -p $CIRCLE_WORKING_DIRECTORY
+              cat inventory.txt
       - destroy_environment
 
 
@@ -218,10 +223,6 @@ jobs:
       - add_ssh_keys:
               # You can get this ID in the section where you registered the SSH Key
               fingerprints: ["f1:2f:b5:8d:21:5e:2b:39:28:b5:4a:61:4b:f7:61:bc"] 
-      # attach workspace
-      - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: /workspace
       - run:
           name: Install Ansible
           command: |
@@ -258,6 +259,13 @@ jobs:
       - run:
           name: Verify gzip installation
           command: gzip --version
+      # attach workspace
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ~/
+      - run:
+          name: show reference file
+          command: cat .circleci/ansible/inventory.txt
       - run:
           name: Configure server
           command: |
