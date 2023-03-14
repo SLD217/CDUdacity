@@ -204,10 +204,11 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       - run:
-          name: check investory file
+          name: check inventory file
           command: |
               # mkdir -p $CIRCLE_WORKING_DIRECTORY
-              cat inventory.txt
+              cat inventory.txt &&
+              ls -a
               #cat ~/project/.circleci/ansible/inventory.txt
       - destroy_environment
 
@@ -267,7 +268,8 @@ jobs:
           name: show reference file
           command: |
             cat .circleci/ansible/inventory.txt &&
-            cat ~/project/.circleci/ansible/inventory.txt
+            cat ~/project/.circleci/ansible/inventory.txt &&
+            ls -a
       - run:
           name: Configure server
           command: |
