@@ -194,13 +194,13 @@ jobs:
           command: |
               # mkdir -p $CIRCLE_WORKING_DIRECTORY
               cd .circleci/ansible &&
-              echo "[All]" > workspace\inventory.txt &&
+              echo "[All]" > inventory.txt &&
               aws ec2 describe-instances \
               --filters "Name=tag:Project, Values=udapeople" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> workspace\inventory.txt
+              --output text >> inventory.txt
       - persist_to_workspace:
-          root: workspace
+          root: .
           paths:
             - inventory.txt
       - destroy_environment
