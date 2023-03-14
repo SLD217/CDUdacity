@@ -194,13 +194,13 @@ jobs:
           command: |
               # mkdir -p $CIRCLE_WORKING_DIRECTORY
               cd .circleci/ansible &&
-              echo "[All]" > inventory.txt &&
+              echo "[All]" > workspace\inventory.txt &&
               aws ec2 describe-instances \
               --filters "Name=tag:Project, Values=udapeople" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> inventory.txt
+              --output text >> workspace\inventory.txt
       - persist_to_workspace:
-          root: ~
+          root: workspace
           paths:
             - inventory.txt
       - destroy_environment
@@ -220,7 +220,7 @@ jobs:
       # attach workspace
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: .
+          at: /workspace
       - run:
           name: Install Ansible
           command: |
