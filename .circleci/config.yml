@@ -264,6 +264,7 @@ jobs:
       - run:
           name: show reference file
           command: |
+            cd .circleci/ansible &&
             cat inventory.txt &&
             ls -a &&
             pwd
