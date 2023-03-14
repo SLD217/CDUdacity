@@ -194,19 +194,19 @@ jobs:
           command: |
               # mkdir -p $CIRCLE_WORKING_DIRECTORY
               # cd .circleci/ansible &&
-              echo "[all]" > inventory.txt &&
+              echo "[all]" > .circleci/ansible/inventory.txt &&
               aws ec2 describe-instances \
               --filters "Name=tag:project, Values=udapeople" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> inventory.txt 
+              --output text >> .circleci/ansible/inventory.txt 
       - persist_to_workspace:
-          root: ~/project/.circleci/ansible/
+          root: ~/
           paths:
-            - inventory.txt
+            - project/.circleci/ansible/inventory.txt
       - run:
           name: check inventory file
           command: |
-              cat inventory.txt &&
+              cat .circleci/ansible/inventory.txt &&
               pwd
       - destroy_environment
 
@@ -257,11 +257,12 @@ jobs:
           # attach workspace
       - attach_workspace:
           # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/
-          at: /tmp
+          at: ~/
       - run:
           name: show reference file
           command: |
-            cat /tmp/inventory.txt &&
+            cd .circleci/ansible &&
+            cat inventory.txt &&
             ls -a &&
             pwd
       - run:
@@ -277,6 +278,7 @@ jobs:
       - image: cimg
     steps:
       # Checkout code from git
+      - checkout
       - run:
           name: Run migrations
           command: |
