@@ -193,7 +193,8 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
               # mkdir -p $CIRCLE_WORKING_DIRECTORY
-              echo "[my_hosts]" > inventory.txt &&
+              cd .circleci/ansible &&
+              echo "[All]" > inventory.txt &&
               aws ec2 describe-instances \
               --filters "Name=tag:Project, Values=udapeople" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
@@ -259,7 +260,8 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i "./inventory.txt" "configure-server.yml"
+            cd .circleci/ansible &&
+            ansible-playbook -i "inventory.txt" "configure-server.yml"
       - destroy_environment
 
   run-migrations:
