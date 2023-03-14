@@ -194,7 +194,7 @@ jobs:
           command: |
               # mkdir -p $CIRCLE_WORKING_DIRECTORY
               # cd .circleci/ansible &&
-              echo "[all]" > .circleci/ansible/inventory.txt &&
+              echo "[web]" > .circleci/ansible/inventory.txt &&
               aws ec2 describe-instances \
               --filters "Name=tag:project, Values=udapeople" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
