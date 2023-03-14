@@ -203,7 +203,6 @@ jobs:
           root: ~/project/.circleci/ansible/
           paths:
             - inventory.txt
-              #project/.circleci\ansible\inventory.txt
       - run:
           name: check inventory file
           command: |
@@ -213,7 +212,6 @@ jobs:
               pwd
               #cat ~/project/.circleci/ansible/inventory.txt
       - destroy_environment
-
 
   configure-infrastructure:
     docker:
@@ -230,9 +228,6 @@ jobs:
           name: Install Ansible
           command: |
             sudo apt-get update && \
-            # sudo apt-get install -y software-properties-common && \
-            # sudo apt-add-repository -y ppa:ansible/ansible && \
-            # sudo apt-get update && \
             sudo apt-get install -y ansible
       - run:
           name: Verify Ansible installation
@@ -262,23 +257,21 @@ jobs:
       - run:
           name: Verify gzip installation
           command: gzip --version
-      # attach workspace
+          # attach workspace
       - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: ~/
+          # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/
+          at: project/.circleci/ansible
       - run:
           name: show reference file
           command: |
-            cat .circleci/ansible/inventory.txt &&
-            cat ~/project/.circleci/ansible/inventory.txt &&
+            cat inventory.txt &&
             ls -a &&
             pwd
       - run:
           name: Configure server
           command: |
             cd .circleci/ansible &&
-            #cat inventory.txt &&
-            ansible-playbook -i "~/inventory.txt" "configure-server.yml"
+            ansible-playbook -i inventory.txt configure-server.yml
       - destroy_environment
 
   run-migrations:
@@ -413,14 +406,14 @@ workflows:
 #          requires: [build-backend]
 #      - scan-frontend:
 #          requires: [build-frontend]
-      - deploy-infrastructure 
+      - deploy-infrastructure
 #:
 #          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
 #          filters:
 #            branches:
 #              only: [test-feature-branch]
-#      - configure-infrastructure:
-#          requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
 #      - run-migrations:
 #          requires: [configure-infrastructure]
 #      - deploy-frontend:
