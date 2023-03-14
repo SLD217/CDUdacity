@@ -206,11 +206,8 @@ jobs:
       - run:
           name: check inventory file
           command: |
-              # mkdir -p $CIRCLE_WORKING_DIRECTORY
               cat inventory.txt &&
-              ls -a &&
               pwd
-              #cat ~/project/.circleci/ansible/inventory.txt
       - destroy_environment
 
   configure-infrastructure:
