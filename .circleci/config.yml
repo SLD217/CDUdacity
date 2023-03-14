@@ -269,7 +269,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible &&
-            cat inventory.txt &&
+            #cat inventory.txt &&
             ansible-playbook -i "inventory.txt" "configure-server.yml"
       - destroy_environment
 
@@ -410,8 +410,8 @@ workflows:
 #          filters:
 #            branches:
 #              only: [test-feature-branch]
-#      - configure-infrastructure:
-#          requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
 #      - run-migrations:
 #          requires: [configure-infrastructure]
 #      - deploy-frontend:
