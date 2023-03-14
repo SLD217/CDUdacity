@@ -200,10 +200,10 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> inventory.txt 
       - persist_to_workspace:
-          root: ~/
+          root: ~/.circleci/ansible/
           paths:
-            - project/.circleci/ansible/inventory.txt
-              #.circleci\ansible\inventory.txt
+            - inventory.txt
+              #project/.circleci\ansible\inventory.txt
       - run:
           name: check inventory file
           command: |
@@ -413,7 +413,8 @@ workflows:
 #          requires: [build-backend]
 #      - scan-frontend:
 #          requires: [build-frontend]
-      - deploy-infrastructure #:
+      - deploy-infrastructure 
+#:
 #          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
 #          filters:
 #            branches:
