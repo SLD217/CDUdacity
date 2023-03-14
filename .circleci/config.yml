@@ -202,7 +202,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - home/circleci/project/.circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
               #.circleci\ansible\inventory.txt
       - run:
           name: check inventory file
@@ -418,8 +418,8 @@ workflows:
 #          filters:
 #            branches:
 #              only: [test-feature-branch]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
+#      - configure-infrastructure:
+#          requires: [deploy-infrastructure]
 #      - run-migrations:
 #          requires: [configure-infrastructure]
 #      - deploy-frontend:
