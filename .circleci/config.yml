@@ -257,12 +257,11 @@ jobs:
           # attach workspace
       - attach_workspace:
           # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/
-          at: project/.circleci/ansible
+          at: /tmp
       - run:
           name: show reference file
           command: |
-            cd .circleci/ansible &&
-            cat inventory.txt &&
+            cat /tmp/inventory.txt &&
             ls -a &&
             pwd
       - run:
