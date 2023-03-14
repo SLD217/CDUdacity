@@ -208,7 +208,8 @@ jobs:
           command: |
               # mkdir -p $CIRCLE_WORKING_DIRECTORY
               cat inventory.txt &&
-              ls -a
+              ls -a &&
+              pwd
               #cat ~/project/.circleci/ansible/inventory.txt
       - destroy_environment
 
@@ -269,7 +270,8 @@ jobs:
           command: |
             cat .circleci/ansible/inventory.txt &&
             cat ~/project/.circleci/ansible/inventory.txt &&
-            ls -a
+            ls -a &&
+            pwd
       - run:
           name: Configure server
           command: |
