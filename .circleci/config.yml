@@ -209,7 +209,7 @@ jobs:
           command: |
               cat .circleci/ansible/inventory.txt &&
               pwd
-      - destroy_environment:
+      - destroy_environment
 
   configure-infrastructure:
     docker:
