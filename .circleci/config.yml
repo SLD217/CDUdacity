@@ -277,18 +277,27 @@ jobs:
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
-      - image: cimg/node:19.7.0
+      - image: cimg/node:19.7.0 #cimg/node:13.8.0
     steps:
       # Checkout code from git
       - checkout
       - restore_cache:
           keys: [backend-build]
       - run:
+          name: Install AWS CLI
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y python3-pip && \
+            sudo pip3 install awscli
+      - run:
+          name: Verify AWS CLI installation
+          command: aws --version
+      - run:
           name: Run migrations
           command: |
             cd backend
-            nmp install
-            nmp run migrations > migrations_dump.txt
+            npm install
+            npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
           name: Send migration results to memstash
