@@ -26,13 +26,13 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
+            SUCCESS = $(curl --insecure https://kvdb.io/T5Z7SuAe53ZFcVFdvdjR6E/migration_<< parameters.workflow_id >>)
             if(( $SUCCESS==1 )); 
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+              cd ~/project/backend
+              npm install
+              npm run migrations:revert
+              #exit 1
             fi
             
 jobs:
@@ -209,7 +209,7 @@ jobs:
           command: |
               cat .circleci/ansible/inventory.txt &&
               pwd
-      - destroy_environment
+      - destroy_environment:
 
   configure-infrastructure:
     docker:
@@ -286,7 +286,7 @@ jobs:
       - run:
           name: Install AWS CLI
           command: |
-            #sudo apt-get update && \
+            sudo apt-get update && \
             sudo apt-get install -y python3-pip && \
             sudo pip3 install awscli
       - run:
@@ -317,22 +317,71 @@ jobs:
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
-      - image: cimg
+      - image: amazon/aws-cli
     steps:
       # Checkout code from git
+      - checkout
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+      # install dependencies
       - run:
-          name: Install dependencies
+          name: Install Ansible
           command: |
-            # your code here
+            sudo apt-get update && \
+            sudo apt-get install -y ansible
+      - run:
+          name: Verify Ansible installation
+          command: ansible --version
+      - run:
+          name: Install AWS CLI
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y python3-pip && \
+            sudo pip3 install awscli
+      - run:
+          name: Verify AWS CLI installation
+          command: aws --version
+      - run:
+          name: Install tar
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y nodejs
+      - run:
+          name: Verify tar installation
+          command: node -v
+      - run:
+          name: Install gzip
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y npm
+      - run:
+          name: Verify gzip installation
+          command: npm --version
+          # attach workspace
       - run:
           name: Get backend url
           command: |
             # your code here
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:project, Values=udapeople" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress')
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy_environment
+      - revert-migrations
+
             # your code here
       # Here's where you will add some code to rollback on failure      
                     
@@ -438,8 +487,8 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-#      - deploy-frontend:
-#          requires: [run-migrations]
+      - deploy-frontend:
+          requires: [run-migrations]
 #      - deploy-backend:
 #          requires: [run-migrations]
 #      - smoke-test:
