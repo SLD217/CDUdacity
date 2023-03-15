@@ -340,21 +340,37 @@ jobs:
           name: Verify AWS CLI installation
           command: aws --version
       - run:
-          name: Install tar
+          name: Install node
           command: |
             #sudo apt-get update && \
             sudo apt-get install -y nodejs
       - run:
-          name: Verify tar installation
+          name: Verify node installation
           command: node -v
       - run:
-          name: Install gzip
+          name: Install npm
           command: |
             #sudo apt-get update && \
             sudo apt-get install -y npm
       - run:
-          name: Verify gzip installation
+          name: Verify npm installation
           command: npm --version
+      - run:
+          name: Install tar
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y tar
+      - run:
+          name: Verify tar installation
+          command: tar --version
+      - run:
+          name: Install gzip
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y gzip
+      - run:
+          name: Verify gzip installation
+          command: gzip --version
           # attach workspace
       - attach_workspace:
           # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/
@@ -404,12 +420,12 @@ jobs:
           name: Verify Ansible installation
           command: ansible --version
       - run:
-          name: Install tar
+          name: Install node
           command: |
             #sudo apt-get update && \
             sudo apt-get install -y nodejs
       - run:
-          name: Verify tar installation
+          name: Verify node installation
           command: node -v
       - run:
           name: Install npm
@@ -428,6 +444,30 @@ jobs:
       - run:
           name: Verify AWS CLI installation
           command: aws --version
+      - run:
+          name: Install npm
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y npm
+      - run:
+          name: Verify npm installation
+          command: npm --version
+      - run:
+          name: Install tar
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y tar
+      - run:
+          name: Verify tar installation
+          command: tar --version
+      - run:
+          name: Install gzip
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y gzip
+      - run:
+          name: Verify gzip installation
+          command: gzip --version
       - attach_workspace:
           # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/
           at: ~/
