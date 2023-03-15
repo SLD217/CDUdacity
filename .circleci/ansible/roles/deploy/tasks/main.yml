@@ -1,0 +1,54 @@
+---
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: "install NMP/ NodeJS"
+  become: yes
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update-cache: yes
+
+- name: "install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+- name: create directory
+  become: yes
+  file:
+    path: /home/ubuntu/backend
+    state: directory
+    mode: 0755
+
+- name: copy artifact files
+  become: true
+  copy: 
+    src: ~/project/artifact.tar.gz
+    dest: /home/ubuntu/backend/artifact.tar.gz
+
+- name: unpack backend files
+  become: yes
+  shell: |
+    cd /home/ubuntu/web/backend
+    tar -vxf artifact.tar.gz
+    rm -f artifact.tar.gz
+  args:
+    chdir: /home/ubuntu/backend
+
+- name: start app
+  become: yes
+  shell: |
+    cd /home/ubuntu/backend
+    pm2 stop default
+    pm2 start npm -- start
