@@ -394,8 +394,8 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - destroy_environment
-      - revert_migrations
+      #- destroy_environment
+      #- revert_migrations
 
             # your code here
       # Here's where you will add some code to rollback on failure      
@@ -486,8 +486,8 @@ jobs:
 
       # your code here
       # Here's where you will add some code to rollback on failure  
-      - destroy_environment
-      - revert_migrations
+      #- destroy_environment
+      #- revert_migrations
 
   smoke-test:
     docker:
@@ -499,7 +499,7 @@ jobs:
       - run:
           name: Install nodejs
           command: |
-            #sudo apt-get update && \
+            sudo apt-get update && \
             sudo apt-get install -y nodejs
       - run:
           name: Verify nodejs installation
@@ -558,8 +558,8 @@ jobs:
               return 1
             fi
             # your code here
-      - destroy_environment
-      - revert_migrations
+      #- destroy_environment
+      #- revert_migrations
       
       # Here's where you will add some code to rollback on failure  
 
@@ -627,8 +627,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-#      - smoke-test:
-#          requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
 #      - cloudfront-update:
 #          requires: [smoke-test]
 #      - cleanup:
