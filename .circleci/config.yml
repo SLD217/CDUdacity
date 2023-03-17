@@ -326,6 +326,7 @@ jobs:
           name: Install Ansible
           command: |
             sudo apt-get update && \
+            sudo apt-get upgrade && \
             sudo apt-get install -y ansible
       - run:
           name: Verify Ansible installation
@@ -351,7 +352,7 @@ jobs:
           name: Install npm
           command: |
             #sudo apt-get update && \
-            sudo apt-get install -y npm
+            sudo install -y npm
       - run:
           name: Verify npm installation
           command: npm --version
@@ -392,8 +393,6 @@ jobs:
             cd frontend
             npm install
             npm audit fix --force
-            npm audit fix
-            npm audit fix --force
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
@@ -419,60 +418,62 @@ jobs:
       - run:
           name: Install Ansible
           command: |
-            sudo apt-get update && \
-            sudo apt-get install -y ansible
+            apk update
+            apk add --update ansible
       - run:
           name: Verify Ansible installation
           command: ansible --version
       - run:
-          name: Install node
-          command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y nodejs
-      - run:
-          name: Verify node installation
-          command: node -v
-      - run:
-          name: Install npm
-          command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y npm
-      - run:
-          name: Verify npm installation
-          command: npm --version
-      - run:
-          name: Install AWS CLI
-          command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y python3-pip && \
-            sudo pip3 install awscli
-      - run:
-          name: Verify AWS CLI installation
-          command: aws --version
-      - run:
-          name: Install npm
-          command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y npm
-      - run:
-          name: Verify npm installation
-          command: npm --version
-      - run:
           name: Install tar
           command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y tar
+            #apk update && \
+            apk add --no-cache tar
       - run:
           name: Verify tar installation
           command: tar --version
       - run:
+          name: Install npm
+          command: |
+            #apk update && \
+            apk add --no-cache npm
+      - run:
+          name: Verify npm installation
+          command: npm --version
+      - run:
           name: Install gzip
           command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y gzip
+            #apk update && \
+            apk add --no-cache gzip
       - run:
-          name: Verify gzip installation
+          name: Verify npm installation
           command: gzip --version
+      - run:
+          name: Install curl
+          command: |
+            #apk update && \
+            apk add --no-cache curl
+      - run:
+          name: Verify npm installation
+          command: curl --version
+      - run:
+          name: Install gcompat
+          command: |
+            #apk update && \
+            apk add --no-cache gcompat
+      - run:
+          name: Verify npm installation
+          command: gcompat --version
+      - run:
+          name: Install AWS CLI
+          command: |
+            #sudo apt-get update && \
+            apk add --no-cache python3 py3-pip &&           
+            pip3 install --upgrade pip &&
+            pip3 install awscli &&
+            rm -rf /var/cache/apk/*
+      - run:
+          name: Verify AWS CLI installation
+          command: aws --version
       - attach_workspace:
           # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/
           at: ~/
