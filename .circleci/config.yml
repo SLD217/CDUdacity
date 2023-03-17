@@ -352,10 +352,10 @@ jobs:
           name: Install npm
           command: |
             #sudo apt-get update && \
-            sudo install -y npm
+            npm install -g
       - run:
           name: Verify npm installation
-          command: npm --version
+          command: npm list
       - run:
           name: Install tar
           command: |
@@ -460,9 +460,9 @@ jobs:
           command: |
             #apk update && \
             apk add --no-cache gcompat
-      - run:
-          name: Verify npm installation
-          command: gcompat --version
+ #     - run:
+ #         name: Verify gcompat installation
+ #         command: gcompat --version
       - run:
           name: Install AWS CLI
           command: |
