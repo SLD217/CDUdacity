@@ -317,7 +317,7 @@ jobs:
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
-      - image: cimg/node:13.8.0 # 19.7.0
+      - image: circleci/node:14.18.1 # cimg/node:13.8.0 # 19.7.0
     steps:
       # Checkout code from git
       - checkout
@@ -406,7 +406,7 @@ jobs:
   deploy-backend:
     docker:
       # #Docker image here that supports Ansible
-      - image: cimg/node:13.8.0 #cimg/python:3.9
+      - image: python:3.11-rc-alpine #cimg/python:3.9
     steps:
       # Checkout code from git
       - checkout
@@ -414,6 +414,8 @@ jobs:
       - add_ssh_keys:
               # You can get this ID in the section where you registered the SSH Key
               fingerprints: ["f1:2f:b5:8d:21:5e:2b:39:28:b5:4a:61:4b:f7:61:bc"] 
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install Ansible
           command: |
@@ -479,9 +481,6 @@ jobs:
           command: |
             cd backend
             npm i
-            npm audit fix --force
-            npm audit fix
-            npm audit fix --force
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
@@ -498,7 +497,7 @@ jobs:
   smoke-test:
     docker:
       # Lightweight Docker image 
-      - image: cimg/node:13.8.0
+      - image: python:3.11-rc-alpine
     steps:
       # Checkout code from git
       - checkout
