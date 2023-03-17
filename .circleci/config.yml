@@ -341,22 +341,6 @@ jobs:
           name: Verify AWS CLI installation
           command: aws --version
       - run:
-          name: Install node
-          command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y nodejs
-      - run:
-          name: Verify node installation
-          command: node -v
-      - run:
-          name: Install npm
-          command: |
-            #sudo apt-get update && \
-            npm install -g
-      - run:
-          name: Verify npm installation
-          command: npm list
-      - run:
           name: Install tar
           command: |
             #sudo apt-get update && \
