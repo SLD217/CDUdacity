@@ -505,33 +505,35 @@ jobs:
       - run:
           name: Install nodejs
           command: |
-            sudo apt-get update && \
-            sudo apt-get install -y nodejs
+            apk update
+            apk add --update nodejs 
       - run:
           name: Verify nodejs installation
           command: node -v
       - run:
+          name: Install nodejs
+          command: |
+            #apk update
+            apk add --update npm
+      - run:
+          name: Verify nodejs installation
+          command: npm -v
+      - run:
           name: Install curl
           command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y curl
-      - run:
-          name: Verify curl installation
-          command: curl --version
-      - run:
-          name: Install npm
-          command: |
-            #sudo apt-get update && \
-            sudo apt-get install -y npm
+            #apk update && \
+            apk add --no-cache curl
       - run:
           name: Verify npm installation
-          command: npm --version
+          command: curl --version
       - run:
           name: Install AWS CLI
           command: |
             #sudo apt-get update && \
-            sudo apt-get install -y python3-pip && \
-            sudo pip3 install awscli
+            apk add --no-cache python3 py3-pip &&           
+            pip3 install --upgrade pip &&
+            pip3 install awscli &&
+            rm -rf /var/cache/apk/* 
       - run:
           name: Verify AWS CLI installation
           command: aws --version
