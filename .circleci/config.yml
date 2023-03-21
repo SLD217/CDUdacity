@@ -24,9 +24,10 @@ commands:
       - run:
           name: Revert migrations
           # Add when this will run
+          when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = $(curl --insecure https://kvdb.io/49iRC8jQUUUNyWigQbc9sg/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl --insecure https://kvdb.io/49iRC8jQUUUNyWigQbc9sg/migration_${CIRCLE_WORKFLOW_ID:0:7})
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -477,8 +478,8 @@ jobs:
 
       # your code here
       # Here's where you will add some code to rollback on failure  
-      #- destroy_environment
-      #- revert_migrations
+      - destroy_environment
+      - revert_migrations
 
   smoke-test:
     docker:
@@ -560,16 +561,30 @@ jobs:
   cloudfront-update:
     docker:
       # Docker image here that supports AWS CLI
-      - image: cimg
+      - image: amazon/aws-cli
+    #  working_directory: /tmp
     steps:
       # Checkout code from git
+      - checkout
       - run:
-          name: Install dependencies
+          name: Install tar & gzip
           command: |
+            yum install -y tar gzip
+      - run:
+          name: Verify tar installation
+          command: tar --version
+      - run:
+          name: Verify gzip installation
+          command: gzip --version
             # your code here
       - run:
           name: Update cloudfront distribution
           command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name InitialStack \
+            --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople
             # your code here
       # Here's where you will add some code to rollback on failure  
 
