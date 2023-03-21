@@ -553,8 +553,8 @@ jobs:
               return 1
             fi
             # your code here
-      - destroy_environment
-      - revert_migrations
+      #- destroy_environment
+      #- revert_migrations
       
       # Here's where you will add some code to rollback on failure  
 
