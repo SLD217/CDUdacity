@@ -327,16 +327,12 @@ jobs:
           command: |
             sudo apt-get update && \
             sudo apt-get upgrade && \
-            sudo apt-get install -y ansible
-      - run:
-          name: Verify Ansible installation
-          command: ansible --version
+            sudo apt-get install -y python3
       - run:
           name: Install AWS CLI
           command: |
             #sudo apt-get update && \
-            sudo apt-get install -y python3-pip && \
-            sudo pip3 install awscli
+            sudo apt-get install -y awscli
       - run:
           name: Verify AWS CLI installation
           command: aws --version
@@ -356,6 +352,12 @@ jobs:
       - run:
           name: Verify gzip installation
           command: gzip --version
+      - run:
+          name: Install curl
+          command: |
+            #sudo apt-get update && \
+            sudo apt-get install -y curl
+      - run:
           # attach workspace
       - attach_workspace:
           # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/
@@ -366,7 +368,8 @@ jobs:
             # your code here
             export BACKEND_IP=$(aws ec2 describe-instances \
               --filters "Name=tag:project, Values=udapeople" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress')
+              --query 'Reservations[*].Instances[*].PublicIpAddress'
+              --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
@@ -376,12 +379,12 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm audit fix --force
+            # npm audit fix --force
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      #- destroy_environment
-      #- revert_migrations
+      - destroy_environment
+      - revert_migrations
 
             # your code here
       # Here's where you will add some code to rollback on failure      
@@ -526,7 +529,8 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
               --filters "Name=tag:project, Values=udapeople" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress')
+              --query 'Reservations[*].Instances[*].PublicIpAddress'
+              --output text)
       - run:
           name: Backend smoke test.
           command: |
