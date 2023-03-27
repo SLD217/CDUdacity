@@ -316,7 +316,7 @@ jobs:
           key: backend-build
       - destroy_environment
       - revert_migrations
-     # Here's where you will add some code to rollback on failure      
+     # Here's where you will add some code to rollback on failure    #  
 
   deploy-frontend:
     docker:
