@@ -464,7 +464,7 @@ jobs:
           name: Verify AWS CLI installation
           command: aws --version
       - attach_workspace:
-          # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/
+          # Must be absolute path or relative path from working_directory -~/project/.circleci/ansible/ ufufg
           at: ~/
       - restore_cache:
           keys: [backend-build]
