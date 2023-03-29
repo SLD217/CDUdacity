@@ -312,6 +312,8 @@ jobs:
             cat .env
             npm install
             echo "npm installed"
+            printenv
+            echo "show enviromental values"
             npm run migrations > migrations_dump.txt
             echo "npm migration run"
             echo 'has been executed successfully.' >> migrations_dump.txt
