@@ -645,6 +645,7 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
+            echo workflowID is "${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name InitialStack \
@@ -662,23 +663,47 @@ jobs:
   cleanup:
     docker:
       # Docker image here
-      - image: cimg/node:19.7.0
+      - image: amazon/aws-cli:latest
     steps:
       # Checkout code from git
       - checkout
-
+      - run:
+          name: Install tar & gzip
+          command: |
+            yum install -y tar gzip
+      - run:
+          name: Verify tar installation
+          command: tar --version
+      - run:
+          name: Verify gzip installation
+          command: gzip --version
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get old stack workflow id
           command: |
             # your code here
-            export OldWorkflowID="the id here"
-            export STACKS=[] #put the list of stacks here
+            export OldWorkflowID=$(cat OldWorkflowID.txt)
+            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+            echo OldWorkflowID= "${OldWorkflowID:10:17}"
+            echo Stack names= "${STACKS[@]}"
       - run:
           name: Remove old stacks and files
           command: |
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            echo OldWorkflowID:10:17= "${OldWorkflowID:10:17}"
+            echo CircleworkflowID:0:7= "${CIRCLE_WORKFLOW_ID:0:7}"
+            echo OldWorkflowID:0:7= "${OldWorkflowID:0:7}"
+            echo Stack names= "${STACKS[@]}"
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID:0:7}" ]]
             then
-              # your code here
+              echo "Start the cleanup"
+              echo bucket= "s3://udapeople-${OldWorkflowID:10:17}"
+              aws s3 rb "s3://udapeople-${OldWorkflowID:10:17}" --force
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID:10:17}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID:10:17}"
+            else
+             echo "no old stacks to cleanup"
             fi
 #            
 
